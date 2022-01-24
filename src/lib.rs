@@ -1,10 +1,10 @@
 use std::fs::read_to_string;
 use std::path::Path;
 
-mod lexer;
-mod parser;
+pub mod lexer;
+pub mod parser;
 
-trait ContentOrigin {
+pub trait ContentOrigin {
     fn origin_description(&self) -> &str;
     fn content(&self) -> &str;
 }
@@ -19,11 +19,11 @@ impl ContentOrigin for Path {
 }
 
 #[derive(Clone)]
-struct ContentLocation {
+pub struct ContentLocation {
     origin: dyn ContentOrigin,
     location: usize
 }
 
-trait WithContentLocation {
+pub trait WithContentLocation {
     fn content_location(&self) -> &ContentLocation;
 }

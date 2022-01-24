@@ -30,7 +30,7 @@ impl Display for LexerError {
 
 impl Error for LexerError {}
 
-struct Lexer {
+pub struct Lexer {
     token_definitions: Vec<String>
 }
 
