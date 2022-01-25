@@ -1,7 +1,8 @@
 use crate::lexer::TokenIterator;
 use crate::{ContentLocation, WithContentLocation};
 
-enum ParseError {
+#[derive(Debug)]
+pub enum ParseError {
     NoTokensLeft,
     UnexpectedToken { location: ContentLocation, expected: String },
     FailedToMatchPattern { pattern_name: str }
