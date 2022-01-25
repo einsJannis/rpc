@@ -35,7 +35,13 @@ pub struct Lexer {
 }
 
 impl Lexer {
-    fn lex(&self, content_origin: &dyn ContentOrigin) -> Result<Vec<Token>, LexerError> {
+    pub fn new(token_definitions: Vec<String>) -> Lexer {
+        Lexer { token_definitions }
+    }
+}
+
+impl Lexer {
+    pub fn lex(&self, content_origin: &dyn ContentOrigin) -> Result<Vec<Token>, LexerError> {
         let content = content_origin.content();
         let mut i: usize = 0;
         let mut result: Vec<Token> = Vec::new();
@@ -77,16 +83,22 @@ impl Iterator for TokenIterator {
 }
 
 impl TokenIterator {
-    fn push(&mut self) {
+    pub fn new(tokens: Vec<Token>) -> TokenIterator {
+        TokenIterator { tokens, index: 0, index_stack: vec![] }
+    }
+}
+
+impl TokenIterator {
+    pub fn push(&mut self) {
         self.index_stack.push(self.index)
     }
-    fn pop(&mut self) {
+    pub fn pop(&mut self) {
         self.index = self.index_stack.pop()?;
     }
-    fn spop(&mut self) {
+    pub fn spop(&mut self) {
         self.index_stack.pop();
     }
-    fn auto_use<F: FnOnce() -> ()>(&mut self, function: F) {
+    pub fn auto_use<F: FnOnce() -> ()>(&mut self, function: F) {
         let index = self.index;
         self.index_stack.push(index);
         function();
