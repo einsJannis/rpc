@@ -5,7 +5,7 @@ use crate::{ContentLocation, WithContentLocation};
 pub enum ParseError {
     NoTokensLeft,
     UnexpectedToken { location: ContentLocation, expected: String },
-    FailedToMatchPattern { pattern_name: str }
+    FailedToMatchPattern { location: ContentLocation, pattern_name: str }
 }
 
 pub trait Pattern {

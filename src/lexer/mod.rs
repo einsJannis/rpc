@@ -98,10 +98,11 @@ impl TokenIterator {
     pub fn spop(&mut self) {
         self.index_stack.pop();
     }
-    pub fn auto_use<F: FnOnce() -> ()>(&mut self, function: F) {
+    pub fn auto_use<T, F: FnOnce() -> T>(&mut self, function: F) -> T {
         let index = self.index;
         self.index_stack.push(index);
-        function();
+        let result = function();
         if self.index_stack.last()? == index { self.spop() }
+        return result
     }
 }
