@@ -1,16 +1,24 @@
 use crate::lexer::TokenIterator;
-use crate::WithContentLocation;
+use crate::{ContentLocation, WithContentLocation};
+
+enum ParseError {
+    NoTokensLeft,
+    UnexpectedToken { location: ContentLocation, expected: String },
+    FailedToMatchPattern { pattern_name: str }
+}
 
 pub trait Pattern {
     type Output: WithContentLocation;
-    fn match_pattern(tokens: TokenIterator) -> Self::Output;
+    fn match_pattern(tokens: TokenIterator) -> Result<Self::Output, ParseError>;
 }
 
 pub trait Parsable: WithContentLocation {
-    fn parse(tokens: TokenIterator) -> Self;
+    fn parse(tokens: TokenIterator) -> Result<Self, ParseError>;
 }
 
 impl<T> Pattern for T where T: Parsable {
     type Output = Self;
-    fn match_pattern(tokens: TokenIterator) -> Self::Output { <Self as Parsable>::parse(tokens) }
+    fn match_pattern(tokens: TokenIterator) -> Result<Self::Output, ParseError> {
+        <Self as Parsable>::parse(tokens)
+    }
 }
