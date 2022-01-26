@@ -5,21 +5,21 @@ use crate::{ContentLocation, WithContentLocation};
 pub enum ParseError {
     NoTokensLeft,
     UnexpectedToken { location: ContentLocation, expected: String },
-    FailedToMatchPattern { location: ContentLocation, pattern_name: str }
+    FailedToMatchPattern { location: ContentLocation, pattern_name: String }
 }
 
 pub trait Pattern {
-    type Output: WithContentLocation;
-    fn match_pattern(tokens: TokenIterator) -> Result<Self::Output, ParseError>;
+    type Output;
+    fn match_pattern(tokens: &mut TokenIterator) -> Result<(ContentLocation, Self::Output), ParseError>;
 }
 
-pub trait Parsable: WithContentLocation {
-    fn parse(tokens: TokenIterator) -> Result<Self, ParseError>;
+pub trait Parsable {
+    fn parse(tokens: &mut TokenIterator) -> Result<(ContentLocation, Self), ParseError>;
 }
 
 impl<T> Pattern for T where T: Parsable {
     type Output = Self;
-    fn match_pattern(tokens: TokenIterator) -> Result<Self::Output, ParseError> {
+    fn match_pattern(tokens: &mut TokenIterator) -> Result<(ContentLocation, Self::Output), ParseError> {
         <Self as Parsable>::parse(tokens)
     }
 }

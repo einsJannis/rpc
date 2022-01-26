@@ -9,6 +9,11 @@ pub struct Token {
     content_location: ContentLocation
 }
 
+impl Token {
+    fn value(&self) -> &String { &self.value }
+    fn content_location(&self) -> &ContentLocation { &self.content_location }
+}
+
 impl PartialEq<&str> for Token {
     fn eq(&self, rhs: &&str) -> bool {
         self.value == rhs
